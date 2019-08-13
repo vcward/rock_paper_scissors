@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Project: Rock Paper Scissors</title>
+</head>
+<body>
+    <script>
+        function capitalizeSelection(selection) {
+            const lowerCase = selection.toLowerCase();
+            return lowerCase.replace(lowerCase.substr(0, 1), lowerCase.substr(0, 1).toUpperCase());
+        }
+
+        function computerPlay() {
+            const moves = [ 'rock', 'paper', 'scissors'];
+            const rng = Math.floor(Math.random() * 3);
+            return moves[rng];
+        }
+
+        function playRound(playerSelection, computerSelection) {
+            const isTie = checkTie(playerSelection, computerSelection);
+            if (isTie) {
+                return 'tie'
+            }
+            const playerWin = playerWins(playerSelection, computerSelection);
+            return playerWin ? 'player' : 'computer';
+        }
+
+        function playerWins(playerSelection, computerSelection) {
+            switch(playerSelection) {
+                case 'Rock': return computerSelection === 'Scissors';
+                case 'Paper': return computerSelection === 'Rock';
+                case 'Scissors': return computerSelection === 'Paper';
+            }
+        }
+
+        function checkTie(playerSelection, computerSelection) {
+            return playerSelection === computerSelection ? true : false;
+        }
+
+        function game() {
+            let round = 1;
+            let playerScore = 0;
+            let computerScore = 0;
+            while (round <= 5) {
+                const userInput = prompt(`Round ${round}: Enter rock, paper, or scissors`);
+                const computerSelection = computerPlay();
+                const playerCapitalize = capitalizeSelection(userInput);
+                const computerCapitalize = capitalizeSelection(computerSelection);
+                const valid = checkValidInput(playerCapitalize);
+                if (!valid) {
+                    alert(`Invalid input: ${userInput}. Try again.`)
+                }
+                if (valid) {
+                    const roundResults = playRound(playerCapitalize, computerCapitalize);
+                    if (roundResults === 'tie') {
+                        alert(`Tie! ${playerCapitalize} ties ${computerCapitalize}`);
+                    }
+                    if (roundResults === 'player') {
+                        playerScore++;
+                        alert(`You Win! ${playerCapitalize} beats ${computerCapitalize}`);
+                    }
+                    if (roundResults === 'computer') {
+                        computerScore++;
+                        alert(`You Lose! ${computerCapitalize} beats ${playerCapitalize}`);
+                    }
+                    round++;
+                }
+            }
+            alert(`Game over! You: ${playerScore} Computer: ${computerScore}`);
+        }
+
+        function checkValidInput(input) {
+            const validInputs = ['Rock', 'Paper', 'Scissors'];
+            return validInputs.includes(input);
+        }
+        
+        game();
+    </script>
+</body>
+</html>
